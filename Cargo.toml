@@ -1,0 +1,9 @@
+[workspace]
+
+members = [
+    "mycode",
+    "integration-test",
+]
+
+default-members = ["mycode"]
+
