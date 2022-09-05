@@ -1,0 +1,24 @@
+name: CI
+
+on: push
+
+jobs:
+  check:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: setup deps
+        run: |
+          rustup component add llvm-tools-preview
+          cargo install grcov
+
+      - name: run
+        run: make coverage-coveralls
+
+      - name: coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./integration-test/out-cov

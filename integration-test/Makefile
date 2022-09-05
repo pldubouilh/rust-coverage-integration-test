@@ -24,6 +24,10 @@ coverage-report:: coverage
 	@-sleep 2 && open http://127.0.0.1:8000 || xdg-open http://127.0.0.1:8000 &
 	python -m http.server --directory out-cov
 
+coverage-coveralls:: coverage
+	rm -rf out-cov
+	grcov -s ../ -b ${COVERAGE_MYCODE_BIN} -t lcov -o out-cov traces/*.profraw
+
 coverage-summary:: coverage
 	llvm-profdata merge -sparse traces/*.profraw -o out.profdata
 	llvm-cov report -instr-profile=out.profdata --summary-only ${COVERAGE_MYCODE_BIN} ../mycode

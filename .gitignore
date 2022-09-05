@@ -1,5 +1,5 @@
 /target
 /integration-test/target_coverage/
-**/out-cov/**
+**/out-cov
 **.profraw
 **.profdata
