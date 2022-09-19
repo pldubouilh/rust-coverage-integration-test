@@ -1,24 +1,44 @@
 name: CI
 
-on: push
+on: pull_request
 
 jobs:
   check:
     name: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
 
       - name: setup deps
         run: |
           rustup component add llvm-tools-preview
-          cargo install grcov
+          # cargo install grcov
+          sudo apt -y install llvm
 
       - name: run
-        run: make coverage-coveralls
+        run: make -C integration-test coverage-percentage-gh
 
-      - name: coveralls
-        uses: coverallsapp/github-action@master
+      - name: Find Comment
+        uses: peter-evans/find-comment@v2
+        id: fc
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ./integration-test/out-cov
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: coverage bot
+
+      - name: Create comment
+        if: steps.fc.outputs.comment-id == ''
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            **coverage bot**
+            commit ${{ github.sha }} is at `${{ env.COVERAGE_STAT }}`
+
+      - name: Update comment
+        if: steps.fc.outputs.comment-id != ''
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          body: |
+            commit ${{ github.sha }} is at `${{ env.COVERAGE_STAT }}`
