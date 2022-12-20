@@ -15,6 +15,6 @@ fn do_finally() {
 fn main() {
     do_something();
     do_something_else();
-    // do_finally();
+    do_finally();
     eprintln!("");
 }
