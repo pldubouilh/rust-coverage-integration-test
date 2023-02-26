@@ -1,4 +1,4 @@
-# rust-coverage-integration-test
+# rust coverage integration test
 
 [![Coverage Status](https://coveralls.io/repos/github/pldubouilh/rust-coverage-integration-test/badge.svg?branch=main)](https://coveralls.io/github/pldubouilh/rust-coverage-integration-test?branch=main)
 
@@ -11,3 +11,11 @@ needs a rustup component, and grcov
 % rustup component add llvm-tools-preview
 % cargo install grcov
 ```
+
+and then run coverage analysis report
+```sh
+% make -C integration-test coverage-report
+# browser will open with code coverage report
+```
+
+see Makefile in integration-test for more targets (github action comment, coveralls, etc...)
